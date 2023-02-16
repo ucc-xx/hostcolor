@@ -100,7 +100,7 @@ _init_md5 () {
 }
 
 _init_md5sum () {
-    command -v md5sum >/dev/null 2>&1 && _hashsum="md5sum" || _hashsum="openssl md5"
+    command -v md5sum >/dev/null 2>&1 && _hashsum="md5sum" || _hashsum="openssl md5 -r"
     _hash="_md5sum"
 }
 
