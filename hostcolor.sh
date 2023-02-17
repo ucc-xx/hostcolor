@@ -85,7 +85,7 @@ main () {
         mod=$(echo "scale=0; odd=(($fam % 2) * 2) -1; mem = $mem ; if (mem > 5 ) (mem -4) * odd else (mem -1) * (odd * -1) " | bc)
         col=$(echo "($fam * 3) + 23 + $mod" | bc)
         #debug
-        #printf " %s: %s %d %d %d -> \033[38;5;%dm %s \033[0m %d	%s %s \n" $hsh $val $fam $mem $mod $col $hst $col $_hash $_hashsum
+        #printf " %s: %s %d %d %d -> \033[38;5;%dm %s \033[0m %d	%s %s \n" $hsh $val $fam $mem $mod $col $hst $col $_hash "$_hashsum"
         if [ 0 -eq $prt ] ; then
             echo $col
         else
