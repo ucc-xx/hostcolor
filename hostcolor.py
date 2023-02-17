@@ -29,7 +29,7 @@ def help():
     families stay under 4 members. (e.g. fam0 22-24 and fam1 25-27 overlap
     when one of the families has a fourth member fam1-4 is 25).
 
-    Notice: abc32xyz1 is interpreted as lable = "abcxyz" number = "321"
+    Notice: abc32xyz1 is interpreted as label = "abcxyz" number = "321"
    
     Families have a head, defining the name (i.e. fam53), the head is allways
     member #1, not #0. This family name is fam[0-66] and the color of the head
