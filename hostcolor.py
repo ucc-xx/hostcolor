@@ -7,7 +7,7 @@
 # Notice: The sh and py versions of host-color have a slight math. varinace
 # and are not to be used interchangebly (e.g. web1 sh->50 and py->53).
 
-import getopt, hashlib, sys 
+import getopt, hashlib, sys
 
 def usage():
     print("usage: " + sys.argv[0] + "  --help")
