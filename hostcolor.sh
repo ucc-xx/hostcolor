@@ -9,12 +9,13 @@
 
 usage () {
     echo "usage: $0 --help"
+    echo "usage: $0 [-n] [-p] [-s salt] hostname [hostname [hostname [...]]]"
     echo "usage: $0 [--pretty-print] [--salt=salt] hostname [hostname [hostname [...]]]"
     echo ""
 }
 
 version () {
-    echo "host-color v1.1sh ## 2021-06-01 ## ucc-xx"
+    echo "host-color v1.2sh ## 2023-03-18 ## ucc-xx"
     echo ""
 }
 
@@ -68,6 +69,7 @@ main () {
     prt=0  #pretty-print off
     while [ $# -gt 0 ] ; do
         case ${1} in
+            -n|--no-newline)    nnl=1 && shift && continue ;;
             -p|--pretty-print)  prt=1 && shift && continue ;;
             -s|--salt)          slt=${2} && shift && shift && continue ;;
             -s=*|--salt=*)      slt=$(echo ${1} | cut -d= -f2) && shift && continue ;;
@@ -87,7 +89,7 @@ main () {
         #debug
         #printf " %s: %s %d %d %d -> \033[38;5;%dm %s \033[0m %d	%s %s \n" $hsh $val $fam $mem $mod $col $hst $col $_hash "$_hashsum"
         if [ 0 -eq $prt ] ; then
-            echo $col
+            echo ${nnl:+-n} $col ${nnl:+''}
         else
             printf " \033[48;5;%dm    \033[0m %d	\033[38;5;%dm %s \033[0m \n"  $col $col $col $hst
         fi
