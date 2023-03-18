@@ -29,7 +29,7 @@ help () {
     This works well for [number] 0-2 and ok up to 3. After that there might be
     collisions. There are up to 66 color families with 3 destinct colors if all
     families stay under 4 members. (e.g. fam0 22-24 and fam1 25-27 overlap
-    when one of the families has a fourth member fam1-4 is 25).
+    when the family 0 has a fourth member: fam0-4 is 25).
     
     Notice: abc32xyz1 is interpreted as label = "abcxyz" number = "321"
     
