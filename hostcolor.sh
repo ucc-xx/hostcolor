@@ -89,7 +89,7 @@ main () {
         #debug
         #printf " %s: %s %d %d %d -> \033[38;5;%dm %s \033[0m %d	%s %s \n" $hsh $val $fam $mem $mod $col $hst $col $_hash "$_hashsum"
         if [ 0 -eq $prt ] ; then
-            echo ${nnl:+-n} $col ${nnl:+''}
+            /bin/echo ${nnl:+-n} $col ${nnl:+''}
         else
             printf " \033[48;5;%dm    \033[0m %d	\033[38;5;%dm %s \033[0m \n"  $col $col $col $hst
         fi
@@ -112,7 +112,7 @@ _md5 () {
 }
 
 _md5sum () {
-    echo -n $1 | $_hashsum | cut -b1-2
+    /bin/echo -n $1 | $_hashsum | cut -b1-2
 }
 
 if [ "-h" == "$1" -o "--help" == "$1" ] ; then
