@@ -66,6 +66,13 @@ From the in-script documentation:
 
 `-h` `--help`	show the version, usage and in-script documentation only.
 
+`-n` `--no-newline`	do not print a linebreak after each output.
+
+```console
+% ./hostcolor.sh -n test foo1 foo2
+27 155 156
+```
+
 `-p` `--pretty-print`	print a table displaying the colour, its number and the tinted hostname.
 
 ```console
@@ -91,6 +98,20 @@ _…kinda silly without colour._
 209
 210
 ```
+
+### caveat
+Default behaviour, uses line breaks.
+```console
+% ./hostcolor.sh test | xxd
+00000000: 3237 0a                                  27.
+```
+
+Suppressing new lines leads to the use of separators.
+```console
+% ./hostcolor.sh -n test | xxd
+00000000: 3237 20                                  27
+```
+_The separator used may vary depending on the underlying system._
 
 ### debug
 
