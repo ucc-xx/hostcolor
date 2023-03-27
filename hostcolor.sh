@@ -95,6 +95,7 @@ main () {
         fi
         shift
     done
+    _ret=0
 }
 
 _init_md5 () {
@@ -116,6 +117,10 @@ _md5sum () {
 
 if [ "-h" == "$1" -o "--help" == "$1" ] ; then
     help
+    _ret=0
 else
-    main $*
+    [ $# -gt 0 ] && main $*
+    [ $# -eq 0 -a -t 1 ] && usage
 fi
+
+exit ${_ret:-1}
