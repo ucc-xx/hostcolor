@@ -14,6 +14,7 @@ You can run the scripts from a shell.
 
 ```console
 ./hostcolor.sh --help
+./hostcolor.sh [-n] [-p] [-s salt] hostname [hostname [hostname [...]]]
 ./hostcolor.sh [--pretty-print] [--salt=salt] hostname [hostname [hostname [...]]]
 ```
 
