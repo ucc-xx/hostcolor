@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Takes [hostname] = [label] + [number] (e.g. dns1 or web7) and calculates
 # a color (256 Format) for shell use. Color range is 18-229. Only last char
@@ -61,7 +61,7 @@ def help():
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hps:", ["help", "pretty-print","salt="])
+        opts, args = getopt.getopt(sys.argv[1:], "hnps:", ["help", "no-newline", "pretty-print","salt="])
     except getopt.GetoptError as err:
         usage()
         print(err)
