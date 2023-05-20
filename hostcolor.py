@@ -11,10 +11,11 @@ import getopt, hashlib, sys
 
 def usage():
     print("usage: " + sys.argv[0] + "  --help")
+    print("usage: " + sys.argv[0] + "  [-n] [-p] [-s salt] hostname [hostname [hostname [...]]]")
     print("usage: " + sys.argv[0] + "  [--pretty-print] [--salt=salt] hostname [hostname [hostname [...]]] \n")
 
 def version():
-    print("host-color v1.1py ## 2021-06-01 ## ucc-xx \n")
+    print("host-color v1.2py ## 2023-05-20 ## ucc-xx \n")
 
 def help():
     version()
@@ -27,7 +28,7 @@ def help():
     This works well for [number] 0-2 and ok up to 3. After that there might be
     collisions. There are up to 66 color families with 3 destinct colors if all
     families stay under 4 members. (e.g. fam0 22-24 and fam1 25-27 overlap
-    when one of the families has a fourth member fam1-4 is 25).
+    when the family 0 has a fourth member: fam0-4 is 25).
 
     Notice: abc32xyz1 is interpreted as label = "abcxyz" number = "321"
    
@@ -67,6 +68,7 @@ def main():
         sys.exit(2)
     slt = '' #good default
     prt = 0 #pretty-print off
+    lbk = "\n"
     for o, a in opts:
         if o in ("-h", "--help"):
             help()
@@ -75,6 +77,8 @@ def main():
             slt = a
         elif o in ("-p", "--pretty-print"):
             prt = 1
+        elif o in ("-n", "--no-newline"):
+            lbk = ''
         else:
             assert False, "unhandled option"
     hsts = len(args) - 1
@@ -102,9 +106,9 @@ def main():
         #debug
         #print (" %s: %.2f %d %d %d -> \033[38;5;%dm %s \033[0m %d" % (hsh, val, fam, mem, mod, col, hst, col))
         if prt:
-            print (" \033[48;5;%dm    \033[0m %d        \033[38;5;%dm %s \033[0m" % (col, col, col, hst))
+            print (" \033[48;5;%dm    \033[0m %d        \033[38;5;%dm %s \033[0m" % (col, col, col, hst), end=lbk)
         else:
-            print("%d" % col)
+            print("%d" % col, end=lbk)
         pos += 1
 
 if __name__ == "__main__":
