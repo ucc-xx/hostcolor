@@ -2,7 +2,7 @@
 
 Script collection to calculate colours from hostnames.
 
-For a given string (hostname) a value in the range 18-229 is calculated, that could be used as an 8-bit colour value. A script will always calculate the same values for the same input.
+For a given string (hostname) a value in the range 18-229 is calculated, that could be used as an 8-bit colour value. A script should always calculate the same values for the same input.
 
 It uses a md5-hash of the given string (hostname) to determine a value. Only the first two bytes are used and there are only 66 colour families, so there are a lot of collisions.
 
