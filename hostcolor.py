@@ -88,7 +88,7 @@ def main():
     pos = 0
     while (hsts >= pos):
         hst = args[pos] #hostname
-        lab = ''.join(x for x in hst if x.isalpha()) #label
+        lab = ''.join(x for x in hst if x.isalpha()) or 'empty' #label
         num = (''.join(x for x in hst if x.isdigit()))[-1:] #number
         hsh = '0x' + hashlib.md5((slt + lab).encode('utf-8')).hexdigest()[:2] #hash 0-ff
         val = int(hsh,16) / 255.0 #value 0-1

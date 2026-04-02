@@ -8,15 +8,15 @@
 # and are not to be used interchangebly (e.g. web1 sh->50 and py->53).
 
 usage () {
-    echo "usage: $0 --help"
-    echo "usage: $0 [-n] [-p] [-x] [-s salt] hostname [hostname [hostname [...]]]"
-    echo "usage: $0 [--pretty-print] [--hex] [--salt=salt] hostname [hostname [hostname [...]]]"
-    echo ""
+    printf '%s\n' "usage: $0 --help"
+    printf '%s\n' "usage: $0 [-n] [-p] [-x] [-s salt] hostname [hostname [hostname [...]]]"
+    printf '%s\n' "usage: $0 [--pretty-print] [--hex] [--salt=salt] hostname [hostname [hostname [...]]]"
+    printf '\n'
 }
 
 version () {
-    echo "host-color v1.3sh ## 2026-04-02 ## ucc-xx"
-    echo ""
+    printf '%s\n' "host-color v1.3sh ## 2026-04-02 ## ucc-xx"
+    printf '\n'
 }
 
 help () {
@@ -73,33 +73,33 @@ main () {
             -p|--pretty-print)  prt=1 && shift && continue ;;
             -x|--hex)           hex=1 && shift && continue ;;
             -s|--salt)          slt=${2} && shift && shift && continue ;;
-            -s=*|--salt=*)      slt=$(echo ${1} | cut -d= -f2) && shift && continue ;;
+            -s=*|--salt=*)      slt=$(printf '%s\n' "${1}" | cut -d= -f2) && shift && continue ;;
             *)                  break ;;
         esac
     done
     while [ $# -gt 0 ] ; do
         hst=${1}  #hostname
-        lab=$(echo ${1}| sed -e 's/[0-9]*//g') #label
-        num=$(echo ${1}| sed -e 's/[^0-9]*//g') #number
-        hsh=$($_hash "$slt$lab" | tr a-z A-Z) #make uppercase #hash 0-FF
-        val=$(echo "ibase=16; h=$hsh; ibase=10; scale=2;  h/ FE" | bc) #value 0-1
-        fam=$(echo "v=$val * 66; scale=0; v/1" | bc) #family
+        lab=$(printf '%s\n' "${1}" | sed -e 's/[0-9]*//g') #label
+        num=$(printf '%s\n' "${1}" | sed -e 's/[^0-9]*//g') #number
+        hsh=$($_hash "$slt${lab:-empty}" | tr a-z A-Z) #make uppercase #hash 0-FF
+        val=$(printf '%s\n' "ibase=16; h=$hsh; ibase=10; scale=2;  h/ FE" | bc) #value 0-1
+        fam=$(printf '%s\n' "v=$val * 66; scale=0; v/1" | bc) #family
         mem=${num:-0}
-        mod=$(echo "scale=0; odd=(($fam % 2) * 2) -1; mem = $mem ; if (mem > 5 ) (mem -4) * odd else (mem -1) * (odd * -1) " | bc)
-        col=$(echo "($fam * 3) + 23 + $mod" | bc)
+        mod=$(printf '%s\n' "scale=0; odd=(($fam % 2) * 2) -1; mem = $mem ; if (mem > 5 ) (mem -4) * odd else (mem -1) * (odd * -1) " | bc)
+        col=$(printf '%s\n' "($fam * 3) + 23 + $mod" | bc)
         if [ 1 -eq ${hex:-0} ] ; then
-            _idx=$(echo "$col - 16" | bc)
-            _b=$(echo "$_idx % 6" | bc); _idx=$(echo "$_idx / 6" | bc)
-            _g=$(echo "$_idx % 6" | bc); _r=$(echo "$_idx / 6" | bc)
-            _rv=$(echo "if ($_r == 0) 0 else $_r * 40 + 55" | bc)
-            _gv=$(echo "if ($_g == 0) 0 else $_g * 40 + 55" | bc)
-            _bv=$(echo "if ($_b == 0) 0 else $_b * 40 + 55" | bc)
+            _idx=$(printf '%s\n' "$col - 16" | bc)
+            _b=$(printf '%s\n' "$_idx % 6" | bc); _idx=$(printf '%s\n' "$_idx / 6" | bc)
+            _g=$(printf '%s\n' "$_idx % 6" | bc); _r=$(printf '%s\n' "$_idx / 6" | bc)
+            _rv=$(printf '%s\n' "if ($_r == 0) 0 else $_r * 40 + 55" | bc)
+            _gv=$(printf '%s\n' "if ($_g == 0) 0 else $_g * 40 + 55" | bc)
+            _bv=$(printf '%s\n' "if ($_b == 0) 0 else $_b * 40 + 55" | bc)
             out=$(printf "%02x%02x%02x" $_rv $_gv $_bv)
         else
             out=$col
         fi
         if [ 0 -eq $prt ] ; then
-            /bin/echo ${nnl:+-n} $out ${nnl:+''}
+            printf '%s' "$out"; [ -z "${nnl}" ] && printf '\n'
         else
             printf " \033[48;5;%dm    \033[0m %s	\033[38;5;%dm %s \033[0m \n"  $col "${hex:+#}$out" $col $hst
         fi
@@ -122,14 +122,14 @@ _md5 () {
 }
 
 _md5sum () {
-    /bin/echo -n $1 | $_hashsum | cut -b1-2
+    printf '%s' "$1" | $_hashsum | cut -b1-2
 }
 
-if [ "-h" == "$1" -o "--help" == "$1" ] ; then
+if [ "-h" = "$1" -o "--help" = "$1" ] ; then
     help
     _ret=0
 else
-    [ $# -gt 0 ] && main $*
+    [ $# -gt 0 ] && main "$@"
     [ $# -eq 0 -a -t 1 ] && usage
 fi
 
