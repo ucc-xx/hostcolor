@@ -14,8 +14,8 @@ You can run the scripts from a shell.
 
 ```console
 ./hostcolor.sh --help
-./hostcolor.sh [-n] [-p] [-s salt] hostname [hostname [hostname [...]]]
-./hostcolor.sh [--pretty-print] [--salt=salt] hostname [hostname [hostname [...]]]
+./hostcolor.sh [-n] [-p] [-x] [-s salt] hostname [hostname [hostname [...]]]
+./hostcolor.sh [--pretty-print] [--hex] [--salt=salt] hostname [hostname [hostname [...]]]
 ```
 
 ## what does it do
@@ -83,6 +83,15 @@ From the in-script documentation:
 ```
 _…kinda silly without colour._
 
+`-x` `--hex`	print the colour as an RGB hex value instead of a decimal 256-colour index.
+
+```console
+% ./hostcolor.sh -x test foo1 foo2
+005fff
+afff5f
+afff87
+```
+
 `-s=` `--salt=`	add a salt to the hostnames in case you don't like the colors suggested
 
 ```console
@@ -112,10 +121,6 @@ Suppressing new lines leads to the use of separators.
 00000000: 3237 20                                  27
 ```
 _The separator used may vary depending on the underlying system._
-
-### debug
-
-As of version 1.2 there are debug statements on lines `90`_sh_ and `107`_py_ that are commented out.
 
 ## license
 

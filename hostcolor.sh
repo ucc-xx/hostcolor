@@ -9,13 +9,13 @@
 
 usage () {
     echo "usage: $0 --help"
-    echo "usage: $0 [-n] [-p] [-s salt] hostname [hostname [hostname [...]]]"
-    echo "usage: $0 [--pretty-print] [--salt=salt] hostname [hostname [hostname [...]]]"
+    echo "usage: $0 [-n] [-p] [-x] [-s salt] hostname [hostname [hostname [...]]]"
+    echo "usage: $0 [--pretty-print] [--hex] [--salt=salt] hostname [hostname [hostname [...]]]"
     echo ""
 }
 
 version () {
-    echo "host-color v1.2sh ## 2023-03-18 ## ucc-xx"
+    echo "host-color v1.3sh ## 2026-04-02 ## ucc-xx"
     echo ""
 }
 
@@ -71,6 +71,7 @@ main () {
         case ${1} in
             -n|--no-newline)    nnl=1 && shift && continue ;;
             -p|--pretty-print)  prt=1 && shift && continue ;;
+            -x|--hex)           hex=1 && shift && continue ;;
             -s|--salt)          slt=${2} && shift && shift && continue ;;
             -s=*|--salt=*)      slt=$(echo ${1} | cut -d= -f2) && shift && continue ;;
             *)                  break ;;
@@ -86,12 +87,21 @@ main () {
         mem=${num:-0}
         mod=$(echo "scale=0; odd=(($fam % 2) * 2) -1; mem = $mem ; if (mem > 5 ) (mem -4) * odd else (mem -1) * (odd * -1) " | bc)
         col=$(echo "($fam * 3) + 23 + $mod" | bc)
-        #debug
-        #printf " %s: %s %d %d %d -> \033[38;5;%dm %s \033[0m %d	%s %s \n" $hsh $val $fam $mem $mod $col $hst $col $_hash "$_hashsum"
-        if [ 0 -eq $prt ] ; then
-            /bin/echo ${nnl:+-n} $col ${nnl:+''}
+        if [ 1 -eq ${hex:-0} ] ; then
+            _idx=$(echo "$col - 16" | bc)
+            _b=$(echo "$_idx % 6" | bc); _idx=$(echo "$_idx / 6" | bc)
+            _g=$(echo "$_idx % 6" | bc); _r=$(echo "$_idx / 6" | bc)
+            _rv=$(echo "if ($_r == 0) 0 else $_r * 40 + 55" | bc)
+            _gv=$(echo "if ($_g == 0) 0 else $_g * 40 + 55" | bc)
+            _bv=$(echo "if ($_b == 0) 0 else $_b * 40 + 55" | bc)
+            out=$(printf "%02x%02x%02x" $_rv $_gv $_bv)
         else
-            printf " \033[48;5;%dm    \033[0m %d	\033[38;5;%dm %s \033[0m \n"  $col $col $col $hst
+            out=$col
+        fi
+        if [ 0 -eq $prt ] ; then
+            /bin/echo ${nnl:+-n} $out ${nnl:+''}
+        else
+            printf " \033[48;5;%dm    \033[0m %s	\033[38;5;%dm %s \033[0m \n"  $col "${hex:+#}$out" $col $hst
         fi
         shift
     done

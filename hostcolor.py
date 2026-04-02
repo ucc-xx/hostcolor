@@ -11,11 +11,11 @@ import getopt, hashlib, sys
 
 def usage():
     print("usage: " + sys.argv[0] + "  --help")
-    print("usage: " + sys.argv[0] + "  [-n] [-p] [-s salt] hostname [hostname [hostname [...]]]")
-    print("usage: " + sys.argv[0] + "  [--pretty-print] [--salt=salt] hostname [hostname [hostname [...]]] \n")
+    print("usage: " + sys.argv[0] + "  [-n] [-p] [-x] [-s salt] hostname [hostname [hostname [...]]]")
+    print("usage: " + sys.argv[0] + "  [--pretty-print] [--hex] [--salt=salt] hostname [hostname [hostname [...]]] \n")
 
 def version():
-    print("host-color v1.2py ## 2023-05-20 ## ucc-xx \n")
+    print("host-color v1.3py ## 2026-04-02 ## ucc-xx \n")
 
 def help():
     version()
@@ -61,13 +61,14 @@ def help():
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hnps:", ["help", "no-newline", "pretty-print","salt="])
+        opts, args = getopt.getopt(sys.argv[1:], "hnpxs:", ["help", "no-newline", "pretty-print", "hex", "salt="])
     except getopt.GetoptError as err:
         usage()
         print(err)
         sys.exit(2)
     slt = '' #good default
     prt = 0 #pretty-print off
+    hex_out = 0 #hex output off
     lbk = "\n"
     for o, a in opts:
         if o in ("-h", "--help"):
@@ -77,6 +78,8 @@ def main():
             slt = a
         elif o in ("-p", "--pretty-print"):
             prt = 1
+        elif o in ("-x", "--hex"):
+            hex_out = 1
         elif o in ("-n", "--no-newline"):
             lbk = ''
         else:
@@ -103,12 +106,20 @@ def main():
         else:
             mod = (mem - 1) * (odd * -1)
         col = fam * 3 + 23 + mod
-        #debug
-        #print (" %s: %.2f %d %d %d -> \033[38;5;%dm %s \033[0m %d" % (hsh, val, fam, mem, mod, col, hst, col))
-        if prt:
-            print (" \033[48;5;%dm    \033[0m %d        \033[38;5;%dm %s \033[0m" % (col, col, col, hst), end=lbk)
+        if hex_out:
+            idx = col - 16
+            b = idx % 6; idx //= 6
+            g = idx % 6; r = idx // 6
+            def c(v): return 0 if v == 0 else v * 40 + 55
+            out = "%02x%02x%02x" % (c(r), c(g), c(b))
         else:
-            print("%d" % col, end=lbk)
+            out = "%d" % col
+        if prt:
+            if hex_out:
+                out = "#" + out
+            print (" \033[48;5;%dm    \033[0m %s        \033[38;5;%dm %s \033[0m" % (col, out, col, hst), end=lbk)
+        else:
+            print(out, end=lbk)
         pos += 1
 
 if __name__ == "__main__":
